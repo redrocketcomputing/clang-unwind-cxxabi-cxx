@@ -1,0 +1,32 @@
+diff --git a/lib/buildit b/lib/buildit
+index 0b1f6e5..2d56f2b 100755
+--- a/lib/buildit
++++ b/lib/buildit
+@@ -94,7 +94,7 @@ case $TRIPLE in
+     SOEXT=so
+     LDSHARED_FLAGS="-o libc++.so.1.0 \
+         -shared -nodefaultlibs -Wl,-soname,libc++.so.1 \
+-        -lpthread -lrt -lc -lstdc++"
++        -lpthread -lrt -lc -lc++abi -lunwind"
+     ;;
+ esac
+ 
+@@ -106,7 +106,7 @@ fi
+ set -x
+ 
+ for FILE in ../src/*.cpp; do
+-	$CXX -c -g -Os $RC_CFLAGS $EXTRA_FLAGS -nostdinc++ -I../include $FILE
++	$CXX -c -g -Os $RC_CFLAGS $EXTRA_FLAGS -nostdinc++ -I../include -I$SYSROOT/include/c++/v1 $FILE
+ done
+ case $TRIPLE in
+   *-*-mingw*)
+@@ -115,7 +115,8 @@ case $TRIPLE in
+   done
+   ;;
+ esac
+-$CC *.o $RC_CFLAGS $LDSHARED_FLAGS $EXTRA_FLAGS
++$CC *.o -L$SYSROOT/lib $RC_CFLAGS $LDSHARED_FLAGS 
++ar rvcs libc++.a *.o
+ 
+ #libtool -static -o libc++.a *.o
+ 

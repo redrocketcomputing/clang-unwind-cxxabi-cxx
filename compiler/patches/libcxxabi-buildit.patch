@@ -1,0 +1,32 @@
+diff --git a/lib/buildit b/lib/buildit
+index 75a7028..4860ffe 100755
+--- a/lib/buildit
++++ b/lib/buildit
+@@ -70,7 +70,7 @@ case $TRIPLE in
+     SOEXT=so
+     LDSHARED_FLAGS="-o libc++abi.so.1.0 \
+         -shared -nodefaultlibs -Wl,-soname,libc++abi.so.1 \
+-        -lpthread -lrt -lc -lstdc++"
++        -lpthread -lrt -lc -lunwind"
+     ;;
+ esac
+ 
+@@ -82,7 +82,7 @@ fi
+ set -x
+ 
+ for FILE in ../src/*.cpp; do
+-	$CXX -c -g -O3 $RC_CFLAGS $EXTRA_FLAGS -I../include $FILE
++	$CXX -c -g -O3 $RC_CFLAGS $EXTRA_FLAGS -I../include -I$SYSROOT/include/c++/v1 -I$SYSROOT/lib/c++/v1 $FILE
+ done
+ case $TRIPLE in
+   *-*-mingw*)
+@@ -91,7 +91,8 @@ case $TRIPLE in
+   done
+   ;;
+ esac
+-$CC *.o $RC_CFLAGS $LDSHARED_FLAGS $EXTRA_FLAGS
++$CC *.o -L$SYSROOT/lib $RC_CFLAGS $LDSHARED_FLAGS 
++ar rcvs libc++abi.a *.o
+ 
+ if [ -z $RC_XBS ]
+ then

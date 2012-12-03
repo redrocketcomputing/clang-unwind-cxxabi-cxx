@@ -1,0 +1,13 @@
+git://sourceware.org/git/binutils.git
+git://sourceware.org/git/glibc.git
+http://llvm.org/git/libcxx
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+http://llvm.org/git/lldb.git
+http://llvm.org/git/clang.git
+git://git.sv.gnu.org/libunwind.git
+git://uclibc.org/uClibc.git
+git://sourceware.org/git/newlib.git
+http://llvm.org/git/llvm.git
+http://llvm.org/git/compiler-rt
+http://llvm.org/git/libcxxabi
+http://llvm.org/git/clang-tools-extra

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+mkdir -p $REPOSITORY_ROOT
+while read repo; do
+	echo "mirroring $repo"
+	git clone --mirror $repo $REPOSITORY_ROOT/$(basename $repo)
+done < ${WORKSPACE}/project/external-projects
+

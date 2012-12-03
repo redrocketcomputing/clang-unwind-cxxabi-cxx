@@ -1,0 +1,3 @@
+- Build repository update scripts, especially for llvm and friends as there projects are rooted in git-svn and need special handling
+- Build in compiler tests
+
