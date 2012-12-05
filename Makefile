@@ -21,16 +21,18 @@
 
 EXCLUDEGOALS = distclean realclean update $(wildcard ${REPOSITORY_ROOT}/*.git) tools
 
+
+export WORKSPACE ?= ${CURDIR}
+export REPOSITORY_ROOT ?= ${WORKSPACE}/repositories
+export TOOLS_ROOT ?= ${WORKSPACE}/local
+export IMAGE_ROOT ?= ${WORKSPACE}/images
+export BUILD_ROOT ?= ${WORKSPACE}/build
+export CROSS_ROOT ?= ${WORKSPACE}/rootfs
+
 export MKSUPPORT_PATH := ${CURDIR}/tools/makefiles
 export MKTARGETS := ${MKSUPPORT_PATH}/targets.mk
 
-export REPOSITORY_ROOT=${WORKSPACE}/repositories
-export TOOLS_ROOT := ${WORKSPACE}/local
-export IMAGE_ROOT := ${WORKSPACE}/images
-export BUILD_ROOT := ${WORKSPACE}/build
-export CROSS_ROOT := ${WORKSPACE}/rootfs
-
-export TARGET_VERSION := trunk
+export TARGET_VERSION ?= trunk
 
 include ${MKTARGETS}
 
@@ -49,3 +51,11 @@ distclean:
 realclean: distclean
 	rm -rf ${REPOSITORY_ROOT}
 
+debug:
+	@echo "REPOSITORY_ROOT=${REPOSITORY_ROOT}"
+	@echo "TOOLS_ROOT=${TOOLS_ROOT}"
+	@echo "IMAGE_ROOT=${IMAGE_ROOT}"
+	@echo "BUILD_ROOT=${BUILD_ROOT}"
+	@echo "CROSS_ROOT=${CROSS_ROOT}"
+	@echo "TARGET_VERSION=${TARGET_VERSION}"
+	@echo "MKSUPPORT_PATH=${MKSUPPORT_PATH}"
