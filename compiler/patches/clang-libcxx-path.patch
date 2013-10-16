@@ -1,8 +1,8 @@
 diff --git a/lib/Driver/ToolChains.cpp b/lib/Driver/ToolChains.cpp
-index 525c05c..9d13c1e 100644
+index ec0d8f3..64c655d 100644
 --- a/lib/Driver/ToolChains.cpp
 +++ b/lib/Driver/ToolChains.cpp
-@@ -2191,6 +2191,9 @@ Linux::Linux(const Driver &D, const llvm::Triple &Triple, const ArgList &Args)
+@@ -2443,6 +2443,9 @@ Linux::Linux(const Driver &D, const llvm::Triple &Triple, const ArgList &Args)
    }
    addPathIfExists(SysRoot + "/lib", Paths);
    addPathIfExists(SysRoot + "/usr/lib", Paths);
@@ -12,7 +12,7 @@ index 525c05c..9d13c1e 100644
  }
  
  bool Linux::HasNativeLLVMSupport() const {
-@@ -2375,6 +2378,8 @@ void Linux::AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
+@@ -2670,6 +2673,8 @@ void Linux::AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
      // libc++ is always installed at a fixed path on Linux currently.
      addSystemInclude(DriverArgs, CC1Args,
                       getDriver().SysRoot + "/usr/include/c++/v1");
@@ -21,8 +21,8 @@ index 525c05c..9d13c1e 100644
      return;
    }
  
-@@ -2411,6 +2416,25 @@ void Linux::AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
-   }
+@@ -2718,6 +2723,25 @@ bool Linux::isPIEDefault() const {
+   return getSanitizerArgs().hasZeroBaseShadow(*this);
  }
  
 +void Linux::AddCXXStdlibLibArgs(const ArgList &Args,
@@ -48,15 +48,17 @@ index 525c05c..9d13c1e 100644
  
  DragonFly::DragonFly(const Driver &D, const llvm::Triple& Triple, const ArgList &Args)
 diff --git a/lib/Driver/ToolChains.h b/lib/Driver/ToolChains.h
-index 4e0320e..e68a93c 100644
+index b3b1d2c..6ab9cb5 100644
 --- a/lib/Driver/ToolChains.h
 +++ b/lib/Driver/ToolChains.h
-@@ -515,6 +515,8 @@ public:
-                                      ArgStringList &CC1Args) const;
-   virtual void AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
-                                             ArgStringList &CC1Args) const;
-+  virtual void AddCXXStdlibLibArgs(const ArgList &Args,
-+                                   ArgStringList &CmdArgs) const;
+@@ -578,6 +578,10 @@ public:
+   virtual void
+   AddClangCXXStdlibIncludeArgs(const llvm::opt::ArgList &DriverArgs,
+                                llvm::opt::ArgStringList &CC1Args) const;
++  virtual void 
++  AddCXXStdlibLibArgs(const llvm::opt::ArgList &Args,
++                      llvm::opt::ArgStringList &CmdArgs) const;
++
+   virtual bool isPIEDefault() const;
  
    std::string Linker;
-   std::vector<std::string> ExtraOpts;

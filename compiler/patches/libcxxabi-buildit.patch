@@ -1,5 +1,5 @@
 diff --git a/lib/buildit b/lib/buildit
-index 75a7028..4860ffe 100755
+index 5a4a710..44b2e7a 100755
 --- a/lib/buildit
 +++ b/lib/buildit
 @@ -70,7 +70,7 @@ case $TRIPLE in
@@ -15,8 +15,8 @@ index 75a7028..4860ffe 100755
  set -x
  
  for FILE in ../src/*.cpp; do
--	$CXX -c -g -O3 $RC_CFLAGS $EXTRA_FLAGS -I../include $FILE
-+	$CXX -c -g -O3 $RC_CFLAGS $EXTRA_FLAGS -I../include -I$SYSROOT/include/c++/v1 -I$SYSROOT/lib/c++/v1 $FILE
+-	$CXX -c -g -O3 $RC_CFLAGS $EXTRA_FLAGS -I../include $OPTIONS $FILE
++	$CXX -c -g -O3 $RC_CFLAGS $EXTRA_FLAGS -I../include -I$SYSROOT/include/c++/v1 -I$SYSROOT/lib/c++/v1 $OPTIONS $FILE
  done
  case $TRIPLE in
    *-*-mingw*)
@@ -25,7 +25,7 @@ index 75a7028..4860ffe 100755
    ;;
  esac
 -$CC *.o $RC_CFLAGS $LDSHARED_FLAGS $EXTRA_FLAGS
-+$CC *.o -L$SYSROOT/lib $RC_CFLAGS $LDSHARED_FLAGS 
++$CC *.o -L$SYSROOT/lib $RC_CFLAGS $LDSHARED_FLAGS $EXTRA_FLAGS
 +ar rcvs libc++abi.a *.o
  
  if [ -z $RC_XBS ]

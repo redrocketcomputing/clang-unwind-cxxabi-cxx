@@ -61,14 +61,14 @@ ${LLVM_INSTALL_PATH}/bin/clang: ${LLVM_BUILD_PATH}/config.log
 	
 ${LLVM_BUILD_PATH}/config.log: ${LLVM_SOURCE_PATH}
 	mkdir -p ${LLVM_BUILD_PATH}
-	cd ${LLVM_BUILD_PATH} && ${LLVM_SOURCE_PATH}/configure CC=${BOOTSTRAP_CC} CXX=${BOOTSTRAP_CXX} --prefix=${LLVM_INSTALL_PATH} --enable-optimized --disable-jit --enable-targets=host
+	cd ${LLVM_BUILD_PATH} && ${LLVM_SOURCE_PATH}/configure CC=${BOOTSTRAP_CC} CXX=${BOOTSTRAP_CXX} --prefix=${LLVM_INSTALL_PATH} --enable-optimized --enable-bindings=none --disable-jit --enable-targets=host
 
 ${LLVM_SOURCE_PATH}:
 	git clone ${REPOSITORY_PATH}/llvm.git ${LLVM_SOURCE_PATH}
 	git clone ${REPOSITORY_PATH}/compiler-rt.git ${LLVM_SOURCE_PATH}/projects/compiler-rt
 	git clone ${REPOSITORY_PATH}/libcxx.git ${LLVM_SOURCE_PATH}/projects/libcxx
 	git clone ${REPOSITORY_PATH}/clang.git ${LLVM_SOURCE_PATH}/tools/clang
-	cd ${LLVM_SOURCE_PATH}/projects/libcxx && patch -p1 < ${PATCH_PATH}/libcxx-do-not-require-ownership-change.patch
+#	cd ${LLVM_SOURCE_PATH}/projects/libcxx && patch -p1 < ${PATCH_PATH}/libcxx-do-not-require-ownership-change.patch
 	cd ${LLVM_SOURCE_PATH}/tools/clang && patch -p1 < ${PATCH_PATH}/clang-libcxx-path.patch
 
 .PHONY: ${LIBUNWIND_INSTALL_PATH}/lib/libunwind.a
@@ -84,7 +84,8 @@ ${LIBUNWIND_SOURCE_PATH}:
 	cd ${LIBUNWIND_SOURCE_PATH} && autoreconf -i
 
 ${LIBCXXABI_INSTALL_PATH}/lib/libc++abi.a: ${LIBCXXABI_BUILD_PATH}/lib/libc++abi.a
-	install -D ${LIBCXXABI_BUILD_PATH}/include/* ${LIBCXXABI_INSTALL_PATH}/include/c++/v1
+	install -D ${LIBCXXABI_BUILD_PATH}/include/mach-o/*.h ${LIBCXXABI_INSTALL_PATH}/include/c++/v1/mach-o
+	install -D ${LIBCXXABI_BUILD_PATH}/include/*.h ${LIBCXXABI_INSTALL_PATH}/include/c++/v1
 	install -D ${LIBCXXABI_BUILD_PATH}/lib/libc++abi.a ${LIBCXXABI_INSTALL_PATH}/lib
 	install -D ${LIBCXXABI_BUILD_PATH}/lib/libc++abi.so.1.0 ${LIBCXXABI_INSTALL_PATH}/lib
 	cd ${LIBCXXABI_INSTALL_PATH}/lib && ln -sf libc++abi.so.1.0 libc++abi.so.1
