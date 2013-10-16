@@ -43,6 +43,7 @@ LIBCXX_SOURCE_PATH := ${SOURCE_PATH}/libcxx
 LIBCXX_INSTALL_PATH := ${INSTALL_PATH}
 
 all: ${LLVM_INSTALL_PATH}/bin/clang ${LIBUNWIND_INSTALL_PATH}/lib/libunwind.a ${LIBCXXABI_INSTALL_PATH}/lib/libc++abi.a ${LIBCXX_INSTALL_PATH}/lib/libc++.a
+	${MAKE} -C ${LLVM_BUILD_PATH} check-all
 
 clean: ${LLVM_SOURCE_PATH}/config.log
 	${MAKE} -C ${LLVM_SOURCE_PATH} clean
@@ -61,13 +62,14 @@ ${LLVM_INSTALL_PATH}/bin/clang: ${LLVM_BUILD_PATH}/config.log
 	
 ${LLVM_BUILD_PATH}/config.log: ${LLVM_SOURCE_PATH}
 	mkdir -p ${LLVM_BUILD_PATH}
-	cd ${LLVM_BUILD_PATH} && ${LLVM_SOURCE_PATH}/configure CC=${BOOTSTRAP_CC} CXX=${BOOTSTRAP_CXX} --prefix=${LLVM_INSTALL_PATH} --enable-optimized --enable-bindings=none --disable-jit --enable-targets=host
+	cd ${LLVM_BUILD_PATH} && ${LLVM_SOURCE_PATH}/configure CC=${BOOTSTRAP_CC} CXX=${BOOTSTRAP_CXX} --prefix=${LLVM_INSTALL_PATH} --enable-optimized --enable-bindings=none --enable-targets=host --enable-cxx11 --enable-libcpp
 
 ${LLVM_SOURCE_PATH}:
 	git clone ${REPOSITORY_PATH}/llvm.git ${LLVM_SOURCE_PATH}
 	git clone ${REPOSITORY_PATH}/compiler-rt.git ${LLVM_SOURCE_PATH}/projects/compiler-rt
 	git clone ${REPOSITORY_PATH}/libcxx.git ${LLVM_SOURCE_PATH}/projects/libcxx
 	git clone ${REPOSITORY_PATH}/clang.git ${LLVM_SOURCE_PATH}/tools/clang
+	git clone ${REPOSITORY_PATH}/lldb.git ${LLVM_SOURCE_PATH}/tools/lldb
 #	cd ${LLVM_SOURCE_PATH}/projects/libcxx && patch -p1 < ${PATCH_PATH}/libcxx-do-not-require-ownership-change.patch
 	cd ${LLVM_SOURCE_PATH}/tools/clang && patch -p1 < ${PATCH_PATH}/clang-libcxx-path.patch
 
