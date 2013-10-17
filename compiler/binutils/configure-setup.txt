@@ -1,0 +1,7 @@
+./configure CFLAGS="-Wno-string-plus-int -Wno-empty-body -Wno-unused-function -Wno-self-assign -Wno-mismatched-tags -Wno-unused-private-field" \
+		CXXFLAGS="-Wno-mismatched-tags -Wno-unused-private-field -Wno-unneeded-internal-declaration -Wno-unused-variable -Wno-unused-parameter" \
+		CC=$WORKSPACE/build/compiler/final/bin/clang CXX=$WORKSPACE/build/compiler/final/bin/clang++ \
+		--prefix=$PWD/_install \
+		--enable-lto \
+		--enable-gold \
+		--enable-plugins
