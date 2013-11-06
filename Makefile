@@ -32,7 +32,7 @@ export CROSS_ROOT ?= ${WORKSPACE}/rootfs
 export MKSUPPORT_PATH := ${CURDIR}/tools/makefiles
 export MKTARGETS := ${MKSUPPORT_PATH}/targets.mk
 
-export TARGET_VERSION ?= trunk
+export TARGET_VERSION ?= master
 
 include ${MKTARGETS}
 

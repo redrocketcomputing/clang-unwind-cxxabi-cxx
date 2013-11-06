@@ -1,0 +1,49 @@
+diff --git a/lib/Driver/ToolChains.cpp b/lib/Driver/ToolChains.cpp
+index fffba0e..e7eaedc 100644
+--- a/lib/Driver/ToolChains.cpp
++++ b/lib/Driver/ToolChains.cpp
+@@ -2344,6 +2344,9 @@ Linux::Linux(const Driver &D, const llvm::Triple &Triple, const ArgList &Args)
+   addPathIfExists(SysRoot + "/lib", Paths);
+   addPathIfExists(SysRoot + "/usr/lib", Paths);
+ 
++  if (GetCXXStdlibType(Args) == ToolChain::CST_Libcxx)
++    addPathIfExists(getDriver().InstalledDir + "/../lib", Paths);
++
+   IsPIEDefault = SanitizerArgs(*this, Args).hasZeroBaseShadow();
+ }
+ 
+@@ -2558,6 +2561,8 @@ void Linux::AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
+     // libc++ is always installed at a fixed path on Linux currently.
+     addSystemInclude(DriverArgs, CC1Args,
+                      getDriver().SysRoot + "/usr/include/c++/v1");
++	addSystemInclude(DriverArgs, CC1Args, 
++                     getDriver().InstalledDir + "/../include/c++/v1");
+     return;
+   }
+ 
+@@ -2604,6 +2609,25 @@ bool Linux::isPIEDefault() const {
+   return IsPIEDefault;
+ }
+ 
++void Linux::AddCXXStdlibLibArgs(const ArgList &Args,
++                                 ArgStringList &CmdArgs) const {
++  switch (GetCXXStdlibType(Args)) {
++  case ToolChain::CST_Libcxx:
++    CmdArgs.push_back("-lc++");
++    CmdArgs.push_back("-lc++abi");
++    CmdArgs.push_back("-lunwind");
++    if (!Args.hasArg(options::OPT_static)) {
++      CmdArgs.push_back(Args.MakeArgString(std::string("-rpath=") + getDriver().InstalledDir + "/../lib"));
++    }
++    else
++      CmdArgs.push_back("-lpthread");
++    break;
++  case ToolChain::CST_Libstdcxx:
++    CmdArgs.push_back("-lstdc++");
++    break;
++  }
++}
++
+ /// DragonFly - DragonFly tool chain which can call as(1) and ld(1) directly.
+ 
+ DragonFly::DragonFly(const Driver &D, const llvm::Triple& Triple, const ArgList &Args)

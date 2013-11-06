@@ -19,7 +19,7 @@
 # Author: Stephen Street (stephen@redrocketcomputing.com)
 #
 
-export PATCH_ROOT := ${CURDIR}/patches
+export PATCH_ROOT := ${CURDIR}/patches/${TARGET_VERSION}
 
 export BOOTSTRAP_CC := ${BUILD_ROOT}/compiler/bootstrap/bin/clang
 export BOOTSTRAP_CXX := ${BUILD_ROOT}/compiler/bootstrap/bin/clang++

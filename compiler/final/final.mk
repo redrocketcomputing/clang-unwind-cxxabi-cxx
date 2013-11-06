@@ -62,14 +62,14 @@ ${LLVM_INSTALL_PATH}/bin/clang: ${LLVM_BUILD_PATH}/config.log
 	
 ${LLVM_BUILD_PATH}/config.log: ${LLVM_SOURCE_PATH}
 	mkdir -p ${LLVM_BUILD_PATH}
-	cd ${LLVM_BUILD_PATH} && ${LLVM_SOURCE_PATH}/configure CC=${BOOTSTRAP_CC} CXX=${BOOTSTRAP_CXX} --prefix=${LLVM_INSTALL_PATH} --enable-optimized --enable-bindings=none --enable-targets=host --enable-cxx11 --enable-libcpp
+	cd ${LLVM_BUILD_PATH} && ${LLVM_SOURCE_PATH}/configure CC=${BOOTSTRAP_CC} CXX=${BOOTSTRAP_CXX} --prefix=${LLVM_INSTALL_PATH} --enable-optimized --enable-bindings=none --enable-targets=host,x86,arm,aarch64 --enable-cxx11 --enable-libcpp
 
 ${LLVM_SOURCE_PATH}:
-	git clone ${REPOSITORY_PATH}/llvm.git ${LLVM_SOURCE_PATH}
-	git clone ${REPOSITORY_PATH}/compiler-rt.git ${LLVM_SOURCE_PATH}/projects/compiler-rt
-	git clone ${REPOSITORY_PATH}/libcxx.git ${LLVM_SOURCE_PATH}/projects/libcxx
-	git clone ${REPOSITORY_PATH}/clang.git ${LLVM_SOURCE_PATH}/tools/clang
-	git clone ${REPOSITORY_PATH}/lldb.git ${LLVM_SOURCE_PATH}/tools/lldb
+	git clone ${REPOSITORY_PATH}/llvm.git ${LLVM_SOURCE_PATH} -b ${TARGET_VERSION}
+	git clone ${REPOSITORY_PATH}/compiler-rt.git ${LLVM_SOURCE_PATH}/projects/compiler-rt -b ${TARGET_VERSION}
+	git clone ${REPOSITORY_PATH}/libcxx.git ${LLVM_SOURCE_PATH}/projects/libcxx -b ${TARGET_VERSION}
+	git clone ${REPOSITORY_PATH}/clang.git ${LLVM_SOURCE_PATH}/tools/clang -b ${TARGET_VERSION}
+	git clone ${REPOSITORY_PATH}/lldb.git ${LLVM_SOURCE_PATH}/tools/lldb -b ${TARGET_VERSION}
 #	cd ${LLVM_SOURCE_PATH}/projects/libcxx && patch -p1 < ${PATCH_PATH}/libcxx-do-not-require-ownership-change.patch
 	cd ${LLVM_SOURCE_PATH}/tools/clang && patch -p1 < ${PATCH_PATH}/clang-libcxx-path.patch
 
@@ -99,6 +99,7 @@ ${LIBCXXABI_BUILD_PATH}/lib/libc++abi.a: ${LIBCXXABI_SOURCE_PATH}/lib/buildit
 ${LIBCXXABI_SOURCE_PATH}/lib/buildit:
 	mkdir -p ${LIBCXXABI_SOURCE_PATH}
 	git clone ${REPOSITORY_PATH}/libcxxabi.git ${LIBCXXABI_SOURCE_PATH}
+#	git clone ${REPOSITORY_PATH}/libcxxabi.git ${LIBCXXABI_SOURCE_PATH} -b ${TARGET_VERSION}
 	cd ${LIBCXXABI_SOURCE_PATH} && patch -p1 < ${PATCH_PATH}/libcxxabi-buildit.patch
 
 ${LIBCXX_INSTALL_PATH}/lib/libc++.a: ${LIBCXX_BUILD_PATH}/lib/libc++.a
@@ -115,7 +116,7 @@ ${LIBCXX_BUILD_PATH}/lib/libc++.a: ${LIBCXX_SOURCE_PATH}/lib/buildit
 
 ${LIBCXX_SOURCE_PATH}/lib/buildit:
 	mkdir -p ${LIBCXX_SOURCE_PATH}
-	git clone ${REPOSITORY_PATH}/libcxx.git ${LIBCXX_SOURCE_PATH}
+	git clone ${REPOSITORY_PATH}/libcxx.git ${LIBCXX_SOURCE_PATH} -b ${TARGET_VERSION}
 	cd ${LIBCXX_SOURCE_PATH} && patch -p1 < ${PATCH_PATH}/libcxx-buildit.patch
 
 .PHONY: distclean
