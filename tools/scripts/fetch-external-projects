@@ -2,8 +2,8 @@
 
 mkdir -p $REPOSITORY_ROOT
 while read repo; do
-	echo "mirroring $repo"
-	if [[ ! -e $repo ]]; then
+	if [[ ! -e $REPOSITORY_ROOT/$(basename $repo) ]]; then
+		echo "mirroring $repo into $REPOSITORY_ROOT/$(basename $repo)"
 		git clone --mirror $repo $REPOSITORY_ROOT/$(basename $repo)
 	fi
 done < ${WORKSPACE}/project/external-projects
